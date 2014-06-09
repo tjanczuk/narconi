@@ -61,6 +61,7 @@ Establish a WebSocket connection to publish or subscribe to messages from a queu
 
 Some aspects of narconi's behavior are controlled with environment variables:
 
+* `PORT` specfies the TCP port number to open HTTP/WebSocket listener on. Default 8080.
 * `NARCONI_AMQP_URI` specifies the [AMQP URL](http://www.rabbitmq.com/uri-spec.html) to RabbitMQ instance. Default is `amqp://guest:guest@127.0.0.1:5672/%2F`.
 * `NARCONI_MAX_MESSAGE_SIZE` specifies maximum message size in bytes. Default is 64KB.
 * `NARCONI_MAX_MESSAGE_TTL` is the TTL for published messages in seconds. Default is 3600 (1h).
@@ -73,7 +74,7 @@ Some aspects of narconi's behavior are controlled with environment variables:
 * **Embracing HTTP**. The design is optimized to favor using existing HTTP protocol features instead of inventing corresponding features on top of HTTP. For example, favor using HTTP verbs as opposed to passing *actions* in query parameters.  
 * **Core messaging concepts**. The design is aligned with well known core messaging concepts and semantics of a message and queue. We don't aspire to invent or introduce novel usage patterns or ideas.  
 * **Simplicity**. The design is optimized for use in a broad range of clients, including browser clients. For example, JSON is favored over XML. 
-* **Performance**. The design is around connection-oriented WebSocket transport which maps well to the implementation of many connection-oriented messaging protocols (AMQP, MQTT, STOMP, Kafka). This enables performance optimizations related to reducing network overhead and leveraging server affinity. The HTTP endpoints provide a subset of WebSocket functionality for less demanding scenarios.
+* **Performance**. The design focuses on connection-oriented WebSocket transport which maps well to the implementation of many connection-oriented messaging protocols (AMQP, MQTT, STOMP, Kafka). This enables performance optimizations related to reducing network overhead and leveraging server affinity. The HTTP endpoints provide a subset of WebSocket functionality for less demanding scenarios.
 
 ### Endpoints
 
@@ -129,7 +130,7 @@ Empty HTTP 204 response on success.
 
 #### Discovery of websocket endpoint
 
-Not implemented yet. For performance reasons, in clustered deployments it is useful to enable the client to establish a WebSocket connection to the particular instance of a backend which handles a speciifc queue. This endpoint enables the client to discover the WebSocket endpoint for a paticular queue. Given it is not yet implemented,cCurrently Narconi clients establish WebSocket connections to the same URL as the one used to create a queue. 
+Not implemented yet. For performance reasons, in clustered deployments it is useful to enable the client to establish a WebSocket connection to the particular instance of a backend which handles a speciifc queue. This endpoint enables the client to discover the WebSocket endpoint for a paticular queue. Given it is not yet implemented, currently Narconi clients establish WebSocket connections to the same URL as the one used to create a queue. 
 
 To discover an endpoint client can connect to for performing operations on muliple messages, an OPTIONS request is made:
 
@@ -159,7 +160,7 @@ x-msg-x-name2: bar
 
 The *Content-Type* header specifies the MIME type of the message being published. The HTTP request body contains the message in its native format. 
 
-The request may contain a number of `x-msg-x-&lt;name&gt;` HTTP request headers. These are treated as application-specific metadata that will be preserved along with the message and sent to the consumer when the message is received. 
+The request may contain a number of `x-msg-x-<name>` HTTP request headers. These are treated as application-specific metadata that will be preserved along with the message and sent to the consumer when the message is received. 
 
 Empty HTTP 201 response on success.  
 
@@ -272,7 +273,7 @@ Sec-WebSocket-Version: 13
 
 **NOTE** Client will typically call the OPTIONS endpoint on the queue URL to discover the specific WebSocket endpoint to connect to. 
 
-The optional *ack* query parameter controls consumption acknowledgments. If present, the server will require explicit consumption acknowledgments from the client to permamntly remove the message from the system. If absent, messages are implicitly acknowledged when sent from the backend to the client. Note that the implicit aknowledgement can result in message loss in case of a failure.  
+The optional *ack* query parameter controls consumption acknowledgments. If present, the server will require explicit consumption acknowledgments from the client to permanently remove the message from the system. If absent, messages are implicitly acknowledged when sent from the backend to the client. Note that the implicit aknowledgement can result in message loss in case of a failure.  
 
 The optional *limit* query parameter controls the maximum number of unacknowledged messages the client is willing to process at a time. After sending *limit* messages to the client, the server will wait for the client to acknowledge one or more of them before sending new ones. The *limit* paramater does not affect processing when the *ack* parameter is not specified. 
 
@@ -287,7 +288,7 @@ After the websocket connection is established, the client can start receiving me
     "Content-Type": "...",
     "timestamp": 12216256715261,
     "redelivered": false,
-    "ackId": "7"
+    "ackId": "7",
     "x-msg-x-name1": "foo",
     "x-msg-x-name2": "bar",
     ...
