@@ -1,0 +1,28 @@
+{
+  "name": "narconi",
+  "author": {
+    "name": "Tomasz Janczuk <tomasz@janczuk.org>",
+    "url": "http://tomasz.janczuk.org",
+    "twitter": "tjanczuk"
+  },
+  "version": "0.1.0-pre",
+  "description": "HTTP/WS bridge to AMQP 0.9",
+  "main": "./lib/server.js",
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "licenses": [
+    {
+      "type": "Apache",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "dependencies": {
+    "ws": "0.4.31",
+    "restify": "2.8.1",
+    "amqplib": "0.2.0"
+  },
+  "bin": {
+    "narconi": "./lib/server.js"
+  }
+}
