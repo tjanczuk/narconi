@@ -54,6 +54,9 @@ Publish a message to a queue.
 **DELETE /v2/:project/queues/:queue/messages**
 Consume a message from a queue with immediate acknowledgement.
 
+**OPTIONS /v2/:project/queues/:queue**
+Discover WebSocket endpoint to connect to for a particular queue. 
+
 **GET /v2/:project/queues/:queue**
 Establish a WebSocket connection to publish or subscribe to messages from a queue. 
 
