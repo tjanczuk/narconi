@@ -172,7 +172,7 @@ Empty HTTP 201 response on success.
 To efficiently publish multiple messages, the caller first establishes a websocket connection to the server, and then uses that websocket connection to publish multiple messages.
 
 ```
-GET /{version}/{project}/queues/{queue_name}/messages HTTP/1.1
+GET /{version}/{project}/queues/{queue_name}/messages[?ack] HTTP/1.1
 Upgrade: websocket
 Connection: Upgrade
 Sec-WebSocket-Key: ...
@@ -213,7 +213,7 @@ As an optimization, if the message payload yields itself well to encoding into a
 }
 ```
 
-The server confirms reception of every message with a single, empty WebSocket message to the client. Order of confirmations is the same as the order in which the server received messages from the client. This means the client must keep track of the order of messages it sends in order to understand which are still unconfirmed. In case the websocket connection is dropped, the client must assume the unconfirmed messages were not received by the server. 
+If the *ack* query parameter is present, the server confirms reception of every message with a single, empty WebSocket message to the client. Order of confirmations is the same as the order in which the server received messages from the client. This means the client must keep track of the order of messages it sends in order to understand which are still unconfirmed. In case the websocket connection is dropped, the client must assume the unconfirmed messages were not received by the server. 
 
 If the server cannot accept a particular message, it will send a WebSocket message with a JSON object containing information about the error to the client instead of the empty WebSocket message, e.g.:
 
